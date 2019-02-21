@@ -20,7 +20,12 @@ type key int
 //
 // This error will be added as a field inside the request log.
 func LogError(ctx context.Context, err error) {
-	entry := ctx.Value(EntryKey).(*logrus.Entry)
+	entryInterface := ctx.Value(EntryKey)
+	if entryInterface == nil {
+		return
+	}
+
+	entry := entryInterface.(*logrus.Entry)
 
 	entry.Data[logrus.ErrorKey] = err.Error()
 }
